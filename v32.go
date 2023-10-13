@@ -39,14 +39,18 @@ func (my V32) Log() {
 	}
 }
 
-func (my V32) Pow(y float32) {
+func (my V32) Pow(p float32) {
 	for i := range my {
-		my[i] = math32.Pow(my[i], y)
+		my[i] = math32.Pow(my[i], p)
 	}
 }
 
 func (my V32) Scale(s float32) {
 	vecf32.Scale(my, s)
+}
+
+func (my V32) Sum() float32 {
+	return vecf32.Sum(my)
 }
 
 func (my V32) SoftMax() {
