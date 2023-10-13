@@ -23,6 +23,10 @@ func (my V32) Argmin() int {
 	return vecf32.Argmin(my)
 }
 
+func (my V32) Clone() V32 {
+	return slices.Clone(my)
+}
+
 func (my V32) Exp() {
 	for i := range my {
 		my[i] = math32.Exp(my[i])
