@@ -45,21 +45,40 @@ func (my V32) Pow(p float32) {
 	}
 }
 
+func (my V32) Reduce(f func(a, b float32) float32, initial float32) (retVal float32) {
+	return vecf32.Reduce(f, initial, my...)
+}
+
 func (my V32) Scale(s float32) {
-	vecf32.Scale(my, s)
+	for i, v := range my {
+		my[i] = v * s
+	}
 }
 
 func (my V32) Sum() float32 {
-	return vecf32.Sum(my)
+	var sum = float32(0)
+	for _, v := range my {
+		sum += v
+	}
+
+	return sum
 }
 
+// SoftMax 激活函数: 将各个输出节点的输出值范围映射到[0, 1]，并且约束各个输出节点的输出值的和为1
 func (my V32) SoftMax() {
-	var maxVal = slices.Max(my)
+	// 通常max()的理念是: 返回唯一的最大值, 这意味着模型的分类结果是确定且唯一的, 这AI分类中显然不合理.
+	// SoftMax()的理念是: 不再确定唯一一个最大值，而是为每个输出分类的结果都赋予一个概率，表示属于每个类别的可能性。
+	// 参考: https://zhuanlan.zhihu.com/p/105722023
+
+	// 相比于probs[]/sum, 引入指数会将probs[]中的数值拉开极大差距 (在保持大小顺序关系的基础上)
+
+	var maxValue = slices.Max(my)
 	var expSum = float32(0.0)
 	for i := range my {
-		my[i] = math32.Exp(my[i] - maxVal)
+		// 减去maxValue是为了规避数值溢出问题 (在probs[]中maxValue值远超其它的时候), 同时可保持大小顺序关系
+		my[i] = math32.Exp(my[i] - maxValue)
 		expSum += my[i]
 	}
 
-	vecf32.Scale(my, 1.0/expSum)
+	my.Scale(1.0 / expSum)
 }
