@@ -13,43 +13,45 @@ author:     lixianmin
 Copyright (C) - All Rights Reserved
 *********************************************************************/
 
-func Argmax(a []float32) int {
-	return vecf32.Argmax(a)
+type V32 []float32
+
+func (my V32) Argmax() int {
+	return vecf32.Argmax(my)
 }
 
-func Argmin(a []float32) int {
-	return vecf32.Argmin(a)
+func (my V32) Argmin() int {
+	return vecf32.Argmin(my)
 }
 
-func Exp(a []float32) {
-	for i := range a {
-		a[i] = math32.Exp(a[i])
+func (my V32) Exp() {
+	for i := range my {
+		my[i] = math32.Exp(my[i])
 	}
 }
 
-func Log(a []float32) {
-	for i := range a {
-		a[i] = math32.Log(a[i])
+func (my V32) Log() {
+	for i := range my {
+		my[i] = math32.Log(my[i])
 	}
 }
 
-func Pow(a []float32, y float32) {
-	for i := range a {
-		a[i] = math32.Pow(a[i], y)
+func (my V32) Pow(y float32) {
+	for i := range my {
+		my[i] = math32.Pow(my[i], y)
 	}
 }
 
-func Scale(a []float32, s float32) {
-	vecf32.Scale(a, s)
+func (my V32) Scale(s float32) {
+	vecf32.Scale(my, s)
 }
 
-func Softmax(a []float32) {
-	var maxVal = slices.Max(a)
+func (my V32) SoftMax() {
+	var maxVal = slices.Max(my)
 	var expSum = float32(0.0)
-	for i := range a {
-		a[i] = math32.Exp(a[i] - maxVal)
-		expSum += a[i]
+	for i := range my {
+		my[i] = math32.Exp(my[i] - maxVal)
+		expSum += my[i]
 	}
 
-	vecf32.Scale(a, 1.0/expSum)
+	vecf32.Scale(my, 1.0/expSum)
 }
