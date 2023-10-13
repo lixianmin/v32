@@ -1,0 +1,6 @@
+.idea
+go.sum
+logs/
+vendor/
+.DS_Store
+yarn.lock
